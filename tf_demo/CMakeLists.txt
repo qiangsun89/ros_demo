@@ -13,7 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
             std_msgs
             message_generation
             actionlib
-            tf)
+            tf2
+            tf2_ros)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

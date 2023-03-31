@@ -2,13 +2,15 @@
  * @file: 
  * @Author: Qiang Sun
  * @Date: 2023-03-31 09:20:30
- * @LastEditTime: 2023-03-31 10:35:12
+ * @LastEditTime: 2023-03-31 14:12:03
  * @version: 
  * @copyright: ROSIWIT Copyright (c) 2023
  * @brief: 
  */
 #include <ros/ros.h>
-#include <tf/transform_broadcaster.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <turtlesim/Pose.h>
 
 std::string turtle_name;
@@ -16,17 +18,25 @@ std::string turtle_name;
 void poseCallback(const turtlesim::PoseConstPtr& msg)
 {
 // tf广播器
-static tf::TransformBroadcaster br;
+static tf2_ros::TransformBroadcaster br;
 
 // 根据海龟当前的位姿，设置相对于世界坐标系的坐标变换
-tf::Transform transform;
-transform.setOrigin( tf::Vector3(msg->x, msg->y, 0.0) );
-tf::Quaternion q;
+geometry_msgs::TransformStamped transformStamped;
+transformStamped.header.stamp = ros::Time::now();
+transformStamped.header.frame_id = "world";
+transformStamped.child_frame_id = turtle_name;
+transformStamped.transform.translation.x = msg->x;
+transformStamped.transform.translation.y = msg->y;
+transformStamped.transform.translation.z = 0.0;
+tf2::Quaternion q;
 q.setRPY(0, 0, msg->theta);
-transform.setRotation(q);
+transformStamped.transform.rotation.x = q.x();
+transformStamped.transform.rotation.y = q.y();
+transformStamped.transform.rotation.z = q.z();
+transformStamped.transform.rotation.w = q.w();
 
 // 发布坐标变换
-br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", turtle_name));
+br.sendTransform(transformStamped);
 }
 
 int main(int argc, char** argv)
