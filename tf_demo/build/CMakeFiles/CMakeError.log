@@ -1,0 +1,52 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/qiang/Documents/ros_demo_ws/src/ros_demo/tf_demo/build/CMakeFiles/CMakeScratch/TryCompile-axuZkE
+
+Run Build Command(s):/usr/bin/ninja cmTC_b4374 && [1/2] Building C object CMakeFiles/cmTC_b4374.dir/src.c.o
+[2/2] Linking C executable cmTC_b4374
+FAILED: cmTC_b4374 
+: && /usr/bin/cc  -rdynamic CMakeFiles/cmTC_b4374.dir/src.c.o -o cmTC_b4374   && :
+CMakeFiles/cmTC_b4374.dir/src.c.o: In function `main':
+src.c:(.text+0x3e): undefined reference to `pthread_create'
+src.c:(.text+0x4a): undefined reference to `pthread_detach'
+src.c:(.text+0x56): undefined reference to `pthread_cancel'
+src.c:(.text+0x67): undefined reference to `pthread_join'
+src.c:(.text+0x7b): undefined reference to `pthread_atfork'
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/qiang/Documents/ros_demo_ws/src/ros_demo/tf_demo/build/CMakeFiles/CMakeScratch/TryCompile-fLo4oi
+
+Run Build Command(s):/usr/bin/ninja cmTC_e8083 && [1/2] Building C object CMakeFiles/cmTC_e8083.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_e8083
+FAILED: cmTC_e8083 
+: && /usr/bin/cc -DCHECK_FUNCTION_EXISTS=pthread_create -rdynamic CMakeFiles/cmTC_e8083.dir/CheckFunctionExists.c.o -o cmTC_e8083  -lpthreads && :
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+
+

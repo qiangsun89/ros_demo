@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/qiang/Documents/ros_demo_ws/src/ros_demo/tf_demo/build/devel/setup.sh
